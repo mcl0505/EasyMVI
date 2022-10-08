@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  系统背景色  -->
+    <color name="app_system_color">#F4F4F4</color>
+    <color name="color_transparent">#00000000</color>
+    <color name="color_white">#ffffff</color>
+
+    <color name="color_ccc">#CCCCCC</color>
+    <color name="color_ddd">#DDDDDD</color>
+</resources>

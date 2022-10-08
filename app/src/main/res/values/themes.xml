@@ -1,0 +1,22 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.EasyMVVMLibrary" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <!--        App Bar 的背景色-->
+        <item name="colorPrimary">@color/white</item>
+        <!--        status bar（状态栏）背景色-->
+        <item name="colorPrimaryDark">@color/white</item>
+        <!--        控件在选中状态或获取焦点状态下使用这个颜色-->
+        <item name="colorAccent">@color/white</item>
+        <item name="android:background">@android:color/transparent</item>
+        <!--        文本颜色-->
+        <!--        <item name="android:textColorPrimary">@color/textColorPrimary</item>-->
+        <!--        默认工具样式-->
+        <item name="toolbarStyle">@style/NoSpaceActionBarTheme</item>
+    </style>
+
+    <style name="NoSpaceActionBarTheme" parent="Base.Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+    </style>
+</resources>

@@ -1,0 +1,107 @@
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-parcelize' //TODO Parcelable 实现生成器
+
+kapt {
+    generateStubs = true
+}
+
+android {
+    defaultConfig {
+        //方法超出最大数量解决方案
+        multiDexEnabled true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    //DataBinding 使用配置
+    buildFeatures {
+        dataBinding = true
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+}
+
+
+
+dependencies {
+    api fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
+    // TODO =======================================  AndroidX  ======================================================
+    // TODO  方法数超限解决方案
+    implementation rootProject.ext.AndroidX.multidex
+    implementation rootProject.ext.AndroidX.core
+    implementation rootProject.ext.AndroidX.appcompat
+    implementation rootProject.ext.AndroidX.constraintlayout
+    implementation rootProject.ext.AndroidX.vectordrawable
+    // TODO  页面导航
+    implementation rootProject.ext.AndroidX.navigationFragment
+    implementation rootProject.ext.AndroidX.navigationUi
+    // TODO  生命周期相关
+    implementation rootProject.ext.AndroidX.lifecycleViewModel
+    implementation rootProject.ext.AndroidX.lifecycleLiveData
+    implementation rootProject.ext.AndroidX.lifecycleRuntime
+    // TODO  ViewPager2
+    implementation rootProject.ext.AndroidX.viewpager2
+    testImplementation rootProject.ext.AndroidX.junit
+    androidTestImplementation rootProject.ext.AndroidX.test
+    androidTestImplementation rootProject.ext.AndroidX.espresso
+    // TODO ========================================  Jetbrains  ========================================================================
+    //TODO  DSL 封装库
+    implementation rootProject.ext.Jetbrains.anko
+    implementation rootProject.ext.Jetbrains.ankoAppcompat
+    implementation rootProject.ext.Jetbrains.kotlinStdlib
+    implementation rootProject.ext.Jetbrains.kotlinStdlib7
+    implementation rootProject.ext.Jetbrains.kotlinStdlib8
+    implementation rootProject.ext.Jetbrains.kotlinReflect
+    // TODO  协程使用
+    implementation rootProject.ext.Jetbrains.coroutinesAndroid
+    implementation rootProject.ext.Jetbrains.coroutinesCore
+    // TODO ========================================  Squareup  网络请求  ========================================================================
+    implementation rootProject.ext.Squareup.moshi
+    implementation rootProject.ext.Squareup.moshiKotlin
+    kapt rootProject.ext.Squareup.moshiCodegen
+    implementation rootProject.ext.Squareup.okhttp
+    implementation rootProject.ext.Squareup.okhttpInterceptor
+    implementation rootProject.ext.Squareup.retrofitMoshi
+    implementation rootProject.ext.Squareup.retrofit
+    // TODO ========================================  GitHub  第三方框架  ========================================================================
+    implementation rootProject.ext.GitHub.material
+    //  TODO Banner轮播 https://github.com/youth5201314/banner
+    implementation rootProject.ext.GitHub.banner
+    // TODO  刷新框架
+    implementation rootProject.ext.GitHub.smartRefresh
+    implementation rootProject.ext.GitHub.smartRefreshHeader
+    implementation rootProject.ext.GitHub.smartRefreshFooter
+    implementation rootProject.ext.GitHub.brvh
+    // TODO  阿里解析
+    implementation rootProject.ext.GitHub.fastjson
+    // TODO  gson
+    implementation rootProject.ext.GitHub.gson
+    // TODO  图片加载框架
+    implementation rootProject.ext.GitHub.glide
+    implementation rootProject.ext.GitHub.coil
+    implementation rootProject.ext.GitHub.coilGif
+    implementation rootProject.ext.GitHub.coilSvg
+    implementation rootProject.ext.GitHub.coilVideo
+    // TODO  圆角图片
+    implementation rootProject.ext.GitHub.roundedimageview
+    implementation rootProject.ext.GitHub.lottie
+    //TODO MMKV  腾讯开源组件 代替SP  https://github.com/tencent/mmkv
+    implementation rootProject.ext.GitHub.mmkv
+    //TODO PickerView  条件选择器
+    implementation rootProject.ext.GitHub.pickerView
+    //TODO 图片选择器 视频选择器
+//    implementation rootProject.ext.GitHub.pictureselector
+
+    // TODO  页面状态管理 https://github.com/KingJA/LoadSir
+    implementation rootProject.ext.GitHub.loadsir
+    implementation rootProject.ext.GitHub.utilcodex
+    implementation 'com.github.Justson.AgentWeb:agentweb-core:v5.0.0-alpha.1-androidx'
+
+}
