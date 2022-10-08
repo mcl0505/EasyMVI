@@ -103,5 +103,6 @@ dependencies {
     implementation rootProject.ext.GitHub.loadsir
     implementation rootProject.ext.GitHub.utilcodex
     implementation 'com.github.Justson.AgentWeb:agentweb-core:v5.0.0-alpha.1-androidx'
+    implementation "com.github.skydoves:androidveil:1.1.2"
 
 }

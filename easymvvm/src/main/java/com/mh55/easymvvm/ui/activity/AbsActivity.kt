@@ -15,25 +15,27 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
-import com.alibaba.fastjson.JSON
 import com.imyyq.mvvm.base.IActivityResult
 import com.imyyq.mvvm.base.IArgumentsFromIntent
-import com.kckj.baselibrary.ext.bindingInflate
+import com.kingja.loadsir.core.LoadService
+import com.kingja.loadsir.core.LoadSir
 import com.mh55.easymvvm.App.AppManager
 import com.mh55.easymvvm.R
 import com.mh55.easymvvm.ext.*
 import com.mh55.easymvvm.mvvm.BaseViewModel
 import com.mh55.easymvvm.mvvm.intent.BaseViewIntent
 import com.mh55.easymvvm.ui.IView
+import com.mh55.easymvvm.ui.loadsir.ILoadsir
+import com.mh55.easymvvm.ui.loadsir.LoadingCallback
 import com.mh55.easymvvm.utils.LogUtil
 import com.mh55.easymvvm.utils.StatusBarUtils
-import com.mh55.easymvvm.widget.TitleBar
+import com.mh55.easymvvm.widget.title.TitleBar
+import java.lang.NullPointerException
 
 abstract class AbsActivity<V : ViewDataBinding, VM : BaseViewModel> :
-    AppCompatActivity(), IView<V, VM>, IActivityResult, IArgumentsFromIntent {
+    AppCompatActivity(), IView<V, VM>, IActivityResult, IArgumentsFromIntent ,ILoadsir{
     //Activity 标识
     open val TAG: String get() = this::class.java.simpleName
     protected lateinit var mContext: Context
@@ -49,6 +51,8 @@ abstract class AbsActivity<V : ViewDataBinding, VM : BaseViewModel> :
     open val isDark get() = true
     //true=禁用重力感应  false=启用重力感应
     open val isNoSensor get() = false
+    //状态展示的根布局
+    var mLoadSirView:LoadService<*>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +71,10 @@ abstract class AbsActivity<V : ViewDataBinding, VM : BaseViewModel> :
         mViewContent.addView(mBinding.root)
         //初始化ViewModel
         initViewAndViewModel()
+        getLoadSirView()?.let {
+            mLoadSirView = LoadSir.getDefault().register(it)
+        }
+
         //初始化参数
         initParam()
         //初始化标题
@@ -77,6 +85,22 @@ abstract class AbsActivity<V : ViewDataBinding, VM : BaseViewModel> :
         initViewObservable()
         //基础事件观察
         initBaseLiveData()
+    }
+
+    override fun showLoading() {
+        if (mLoadSirView == null){
+            throw NullPointerException("必须先设置状态展示的根布局")
+        }
+
+        mLoadSirView?.showCallback(LoadingCallback::class.java)
+    }
+
+    override fun dismissLoading() {
+        if (mLoadSirView == null){
+            throw NullPointerException("必须先设置状态展示的根布局")
+        }
+
+        mLoadSirView?.showSuccess()
     }
 
     private fun initTitle() {

@@ -8,15 +8,13 @@ import com.mh55.easymvvm.mvvm.BaseViewModel
 class MainViewModel : BaseViewModel() {
 
     val isShow = true
-    var buttomText  = MutableLiveData("跳转")
+    val intentText get() = getArgumentsIntent()?.getStringExtra("text")
+    var indexContent = MutableLiveData<String>()
+
+
 
     fun clickHello(){
         startActivityForResult(UserActivity::class.java)
     }
 
-    override fun onActivityResultOk(intent: Intent) {
-        super.onActivityResultOk(intent)
-        val  text = intent.getStringExtra("title")?:""
-        buttomText.postValue(text)
-    }
 }

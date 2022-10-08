@@ -14,12 +14,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.imyyq.mvvm.base.IActivityResult
+import com.kingja.loadsir.core.LoadService
+import com.kingja.loadsir.core.LoadSir
 import com.mh55.easymvvm.ext.getIntentByMapOrBundle
 import com.mh55.easymvvm.mvvm.BaseViewModel
 import com.mh55.easymvvm.mvvm.intent.BaseViewIntent
 import com.mh55.easymvvm.ui.IView
+import com.mh55.easymvvm.ui.loadsir.ILoadsir
+import com.mh55.easymvvm.ui.loadsir.LoadingCallback
+import com.mh55.easymvvm.utils.LogUtil
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.lang.NullPointerException
 
 /**
  * 公司名称：~漫漫人生路~总得错几步~
@@ -30,7 +36,7 @@ import kotlinx.coroutines.launch
 
 abstract class AbsFragment<V : ViewBinding, VM : BaseViewModel>(
     private val sharedViewModel: Boolean = false,
-) : Fragment(), IView<V, VM>, IActivityResult {
+) : Fragment(), IView<V, VM>, IActivityResult , ILoadsir {
 
     //当前界面 标识
     open val TAG: String get() = this::class.java.simpleName
@@ -39,6 +45,8 @@ abstract class AbsFragment<V : ViewBinding, VM : BaseViewModel>(
     protected lateinit var mBinding: V
     protected lateinit var mViewModel: VM
     private lateinit var mStartActivityForResult: ActivityResultLauncher<Intent>
+    //状态展示的根布局
+    var mLoadSirView: LoadService<*>? = null
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
@@ -55,10 +63,22 @@ abstract class AbsFragment<V : ViewBinding, VM : BaseViewModel>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewAndViewModel()
+        getLoadSirView()?.let {
+            LogUtil.d(it)
+            mLoadSirView = LoadSir.getDefault().register(it)
+        }
         initParam()
         initBaseLiveData()
         initData()
         initViewObservable()
+    }
+
+    override fun showLoading() {
+        mLoadSirView?.showCallback(LoadingCallback::class.java)
+    }
+
+    override fun dismissLoading() {
+        mLoadSirView?.showSuccess()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

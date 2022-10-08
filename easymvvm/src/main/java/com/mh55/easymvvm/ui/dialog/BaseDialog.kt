@@ -98,7 +98,13 @@ open class BaseDialog<DB : ViewDataBinding,VM : BaseViewModel,>(val layoutId: In
     /**
      * 弹框进入与消失动画
      */
-    open fun getDialogAnim(): Int = R.style.dialogAnimBottom
+    open fun getDialogAnim(): Int = when(setGravity()){
+        Gravity.CENTER->R.style.dialogAnimCenter
+        Gravity.BOTTOM->R.style.dialogAnimBottom
+        Gravity.LEFT->R.style.dialogAnimLeft
+        Gravity.RIGHT->R.style.dialogAnimRight
+        else-> R.style.dialogAnimBottom
+    }
 
     protected open fun canCancel(): Boolean {
         return true
@@ -108,6 +114,7 @@ open class BaseDialog<DB : ViewDataBinding,VM : BaseViewModel,>(val layoutId: In
     open fun show(manager: FragmentManager?) {
         super.show(manager!!, TAG)
     }
+
 
     /**
      * 创建viewModel

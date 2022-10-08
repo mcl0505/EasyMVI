@@ -3,8 +3,10 @@ package com.mh55.easymvvm.ext
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.annotation.RequiresApi
 import java.io.Serializable
 
 /**
@@ -136,4 +138,27 @@ fun getIntentByMapOrBundle(
     }
     bundle?.let { intent.putExtras(bundle) }
     return intent
+}
+
+fun MutableMap<String, Any?>?.mapToBundle() :Bundle  {
+    val bundle = Bundle()
+
+    this?.forEach { entry ->
+        if (entry.value!=null)
+        @Suppress("UNCHECKED_CAST")
+        when(val value = entry.value){
+            is Int->bundle.putInt(entry.key,value)
+            is Boolean->bundle.putBoolean(entry.key,value)
+            is Float->bundle.putFloat(entry.key,value)
+            is Double->bundle.putDouble(entry.key,value)
+            is String->bundle.putString(entry.key,value)
+            is Parcelable->bundle.putParcelable(entry.key,value)
+            is Serializable->bundle.putSerializable(entry.key,value)
+            else -> {
+                throw RuntimeException("不支持此类型 $value")
+            }
+        }
+    }
+
+    return bundle
 }

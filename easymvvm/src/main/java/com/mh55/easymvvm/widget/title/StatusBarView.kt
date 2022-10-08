@@ -1,4 +1,4 @@
-package com.mh55.easymvvm.widget
+package com.mh55.easymvvm.widget.title
 
 import android.content.Context
 import android.os.Build
@@ -36,7 +36,6 @@ class StatusBarView @JvmOverloads constructor(context: Context, attrs: Attribute
         }
         return mStatusBarHeight
     }
-
 
     init {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

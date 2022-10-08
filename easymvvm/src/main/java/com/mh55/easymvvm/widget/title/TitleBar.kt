@@ -1,4 +1,4 @@
-package com.mh55.easymvvm.widget
+package com.mh55.easymvvm.widget.title
 
 import android.content.Context
 import android.util.AttributeSet

@@ -12,4 +12,24 @@
         <attr name="bar_title_tv_right_color" format="color" />
         <attr name="bar_title_tv_left_color" format="color" />
     </declare-styleable>
+
+    <!--  底部标签  -->
+    <declare-styleable name="TabButton">
+        <!--    选中图片    -->
+        <attr name="tbn_selected_icon" format="reference" />
+        <!--     未选中图标   -->
+        <attr name="tbn_unselected_icon" format="reference" />
+        <!--     提示文字   -->
+        <attr name="tbn_tip" format="string" />
+        <!--    图片大小    -->
+        <attr name="tbn_icon_size" format="dimension" />
+        <!--    文字大小    -->
+        <attr name="tbn_text_size" format="dimension" />
+        <!--    文字颜色   默认    -->
+        <attr name="tbn_text_color" format="color" />
+        <!--    文字颜色    选中    -->
+        <attr name="tbn_text_select_color" format="color" />
+        <!--    是否选中    -->
+        <attr name="tbn_checked" format="boolean" />
+    </declare-styleable>
 </resources>
