@@ -102,7 +102,10 @@ dependencies {
     // TODO  页面状态管理 https://github.com/KingJA/LoadSir
     implementation rootProject.ext.GitHub.loadsir
     implementation rootProject.ext.GitHub.utilcodex
+    implementation rootProject.ext.GitHub.permissionx
     implementation 'com.github.Justson.AgentWeb:agentweb-core:v5.0.0-alpha.1-androidx'
-    implementation "com.github.skydoves:androidveil:1.1.2"
+    //TODO 骨架布局  https://github.com/ethanhua/Skeleton
+    implementation 'com.ethanhua:skeleton:1.1.2'
+    implementation 'io.supercharge:shimmerlayout:2.1.0'
 
 }

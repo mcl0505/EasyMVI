@@ -17,6 +17,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
+import com.ethanhua.skeleton.SkeletonScreen
 import com.imyyq.mvvm.base.IActivityResult
 import com.imyyq.mvvm.base.IArgumentsFromIntent
 import com.kingja.loadsir.core.LoadService
@@ -53,6 +54,8 @@ abstract class AbsActivity<V : ViewDataBinding, VM : BaseViewModel> :
     open val isNoSensor get() = false
     //状态展示的根布局
     var mLoadSirView:LoadService<*>? = null
+    //骨架布局
+    var mSkeletonScreen: SkeletonScreen?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

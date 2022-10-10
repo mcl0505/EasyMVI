@@ -12,11 +12,13 @@
         android:layout_height="match_parent"
         tools:context=".fragment.IndexFragment"
         android:paddingTop="30dp">
-        <androidx.appcompat.widget.AppCompatTextView
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="index"/>
+            android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

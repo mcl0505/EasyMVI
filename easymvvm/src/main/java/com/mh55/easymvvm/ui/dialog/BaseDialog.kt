@@ -2,8 +2,12 @@ package com.mh55.easymvvm.ui.dialog
 
 import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.kckj.baselibrary.ext.bindingInflate
@@ -27,45 +32,53 @@ open class BaseDialog<DB : ViewDataBinding,VM : BaseViewModel,>(val layoutId: In
 
     @JvmField
     protected var mContext: Context? = null
-    lateinit var mActivity: AppCompatActivity
     lateinit var mDialogBinding: DB
     lateinit var mViewModel: VM
 
     protected lateinit var mRootView: View
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mViewModel = createViewModel()
-        main(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL,getDialogStyle())
     }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mContext = context
-        mActivity = context as AppCompatActivity
-    }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        mContext = activity
+        mViewModel = createViewModel()
+        dialog?.let {
+            it.setCancelable(canCancel())
+            it.setCanceledOnTouchOutside(canCancel())
+            //禁止返回关闭弹框可在此处处理
+            if (!canCancel()){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    it.setOnKeyListener(object : DialogInterface.OnKeyListener  {
+                        override fun onKey(dialog: DialogInterface?, keyCode: Int, event: KeyEvent?): Boolean {
+                            if (keyCode == 4) return true
+                            return false
+                        }
+                    });
+                }
+            }
+        }
+
         mDialogBinding = bindingInflate(inflater,layoutId,container)
         mDialogBinding.lifecycleOwner = this
+        initData()
         return mDialogBinding.root
     }
 
-    //执行在Fragment 的 onGetLayoutInflater 中
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    //点击手机返回
+    fun onKeyBack(){}
 
-        mRootView = LayoutInflater.from(mContext).inflate(layoutId, null)
-        val dialog = Dialog(mContext!!, getDialogStyle())
-        dialog.setContentView(mRootView)
-        dialog.setCancelable(canCancel())
-        dialog.setCanceledOnTouchOutside(canCancel())
-        val window = dialog.window
+    override fun onStart() {
+        super.onStart()
+        val window = dialog?.window
         window!!.setGravity(setGravity())
         window.setWindowAnimations(getDialogAnim())
         window.setLayout(setWidth(), setHeight())
-        return dialog
     }
+
+    fun initData(){}
 
     open fun getDialogStyle(): Int = R.style.dialog_style
 
@@ -81,24 +94,10 @@ open class BaseDialog<DB : ViewDataBinding,VM : BaseViewModel,>(val layoutId: In
         return Gravity.BOTTOM
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        main(savedInstanceState)
-        if (::onViewClick.isInitialized)onViewClick.invoke(mDialogBinding)
-
-    }
-
-    /**
-     * 处理具体的业务逻辑
-     * @param savedInstanceState
-     */
-    open fun main(savedInstanceState: Bundle?) {}
-
-
     /**
      * 弹框进入与消失动画
      */
-    open fun getDialogAnim(): Int = when(setGravity()){
+    private fun getDialogAnim(): Int = when(setGravity()){
         Gravity.CENTER->R.style.dialogAnimCenter
         Gravity.BOTTOM->R.style.dialogAnimBottom
         Gravity.LEFT->R.style.dialogAnimLeft
