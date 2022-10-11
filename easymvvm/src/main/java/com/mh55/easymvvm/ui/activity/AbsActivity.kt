@@ -69,7 +69,6 @@ abstract class AbsActivity<V : ViewDataBinding, VM : BaseViewModel> :
         }
         setContentView(R.layout.activity_root)
         mBinding = initBinding(layoutInflater,null)
-        LogUtil.d(mBinding.toString())
         mViewContent = findViewById(R.id.frame_content)
         mViewContent.addView(mBinding.root)
         //初始化ViewModel

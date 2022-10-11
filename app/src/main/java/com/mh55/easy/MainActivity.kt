@@ -4,6 +4,7 @@ import com.mh55.easy.databinding.ActivityMainBinding
 import com.mh55.easy.fragment.IndexFragment
 import com.mh55.easy.fragment.MineFragment
 import com.mh55.easy.view_model.MainViewModel
+import com.mh55.easymvvm.App.AppUtil
 import com.mh55.easymvvm.ext.toast
 import com.mh55.easymvvm.ui.activity.AbsActivity
 import com.mh55.easymvvm.ui.activity.BaseActivity
@@ -18,6 +19,8 @@ class MainActivity : BaseActivity<ActivityMainBinding,MainViewModel>(R.layout.ac
             IndexFragment.getInstance(mutableMapOf("text" to "123")),
             MineFragment.getInstance()
         ))
+
+
     }
 
 

@@ -13,7 +13,7 @@ object LogUtil {
     private const val E = 0x5
     private const val A = 0x6
 
-    private const val TAG = "LogUtil ==>"
+    private const val TAG = "打印日志"
     private const val TOP_BORDER =
         "╔══════打印开始═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════"
     private const val LEFT_BORDER = "║ "

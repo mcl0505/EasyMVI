@@ -16,6 +16,7 @@ import androidx.core.graphics.drawable.toBitmap
 import com.mh55.easymvvm.App.FileUtil.getDirLength
 import com.mh55.easymvvm.App.FileUtil.getFormatFileSize
 import com.mh55.easymvvm.EasyApplication
+import com.mh55.easymvvm.utils.LogUtil
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
@@ -90,7 +91,7 @@ class AppUtil {
          *
          * @return 可读写返回true, 否则返回false
          */
-        private val isExternalStorageWritable: Boolean
+        val isExternalStorageWritable: Boolean
             get() {
                 val state = Environment.getExternalStorageState()
                 return Environment.MEDIA_MOUNTED == state
@@ -100,7 +101,7 @@ class AppUtil {
         /**
          * 删除某个文件
          */
-        private fun deleteDir(dir: File?): Boolean {
+        fun deleteDir(dir: File?): Boolean {
             if (dir != null && dir.isDirectory) {
                 val children = dir.list()
                 for (i in children.indices) {
@@ -136,6 +137,10 @@ class AppUtil {
             return null
         }
 
+
+    }
+
+    object Cache {
         /**
          * 获取缓存路径
          *
@@ -145,13 +150,12 @@ class AppUtil {
          */
         fun getCachePath(context: Context): String {
             var file: File? = null
-            if (isExternalStorageWritable) {
-                file = getExternalCacheDir(context)
+            if (Storage.isExternalStorageWritable) {
+                file = Storage.getExternalCacheDir(context)
             }
 
             return if (file != null) file.absolutePath else context.cacheDir.absolutePath
         }
-
 
         /**
          * 获取缓存值
@@ -168,15 +172,14 @@ class AppUtil {
          * 清除所有缓存
          */
         fun clearAllCache(context: Context  = EasyApplication.getContext()) {
-            deleteDir(context.cacheDir)
+            Storage.deleteDir(context.cacheDir)
             if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
-                deleteDir(context.externalCacheDir)
+                Storage.deleteDir(context.externalCacheDir)
                 //TODO 有网页清理时注意排错，是否存在/data/data/应用package目录下找不到database文件夹的问题
                 context.deleteDatabase("webview.db")
                 context.deleteDatabase("webviewCache.db")
             }
         }
-
     }
 
     /**

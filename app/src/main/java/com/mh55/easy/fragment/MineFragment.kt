@@ -8,6 +8,7 @@ import com.mh55.easy.R
 import com.mh55.easy.databinding.FragmentMineBinding
 import com.mh55.easy.dialog.CommonDialog
 import com.mh55.easy.view_model.MainViewModel
+import com.mh55.easymvvm.App.AppUtil
 import com.mh55.easymvvm.ext.bindSkeleton
 import com.mh55.easymvvm.ext.mapToBundle
 import com.mh55.easymvvm.ext.singleClick
@@ -19,7 +20,7 @@ import java.util.logging.Handler
 class MineFragment : BaseFragment<FragmentMineBinding, MainViewModel>(R.layout.fragment_mine, BR.viewModel) {
 
     companion object {
-        fun getInstance(map: MutableMap<String,Any?>? = null) = MineFragment().also {
+        fun getInstance(map: MutableMap<String, Any?>? = null) = MineFragment().also {
             it.arguments = map.mapToBundle()
         }
     }
@@ -27,16 +28,22 @@ class MineFragment : BaseFragment<FragmentMineBinding, MainViewModel>(R.layout.f
     override fun initData() {
         super.initData()
 
-//        initSkeleton()
+        initSkeleton()
+
+        mBinding.mSkeleton.postDelayed({
+            mSkeletonScreen?.hide()
+        }, 2 * 1000)
 
         mBinding.apply {
             btn.singleClick {
-                CommonDialog().show(childFragmentManager)
+                mSkeletonScreen?.hide()
+                LogUtil.d(AppUtil.Cache.getCachePath(mActivity))
 
             }
         }
     }
-    private fun initSkeleton(){
+
+    private fun initSkeleton() {
         mSkeletonScreen = mBinding.mSkeleton.bindSkeleton(R.layout.skeleton_base).show()
     }
 
