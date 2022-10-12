@@ -109,9 +109,12 @@ open class BaseDialog<DB : ViewDataBinding,VM : BaseViewModel,>(val layoutId: In
         return true
     }
 
-
     open fun show(manager: FragmentManager?) {
-        super.show(manager!!, TAG)
+        kotlin.runCatching {
+            manager?.beginTransaction()?.remove(this)?.commit()
+            super.show(manager!!, TAG)
+        }
+
     }
 
 

@@ -1,6 +1,7 @@
 package com.mh55.easymvvm.App
 
 import android.os.Build
+import com.mh55.easymvvm.App.ConfigBuilder.Path.CRASH_LOG_PATH
 import com.mh55.easymvvm.EasyApplication
 import com.mh55.easymvvm.utils.DateUtil
 import java.io.*
@@ -11,7 +12,6 @@ import kotlin.system.exitProcess
  * 崩溃信息捕获，存储在 /sdcard/Android/data/xxx.xxx.xxx/cache/Log/crash/日期.log
  */
 internal object CrashHandlerUtil : UncaughtExceptionHandler {
-    private val CRASH_LOG_PATH = EasyApplication.getContext().filesDir.absolutePath + "crash/"
 
     fun init() {
         Thread.setDefaultUncaughtExceptionHandler(this)
