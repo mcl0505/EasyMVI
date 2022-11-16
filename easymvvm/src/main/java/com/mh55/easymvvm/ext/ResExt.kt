@@ -11,4 +11,4 @@ fun Int.getDrawable() : Drawable? = ContextCompat.getDrawable(EasyApplication.ge
 
 fun Int.getString() : String = EasyApplication.getContext().resources.getString(this)
 
-fun Int.getStringArray() : List<String> = EasyApplication.getContext().resources.getStringArray(this).toList() as MutableList<String>
+fun Int.getStringList() : MutableList<String> = EasyApplication.getContext().resources.getStringArray(this).toMutableList()

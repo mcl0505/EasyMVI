@@ -4,7 +4,6 @@ import android.os.SystemClock
 import android.view.View
 import com.mh55.easymvvm.R
 
-private var lastClickTime: Long = 0
 //防止快速点击造成打开多个界面   只允许在 1秒内只能点击一次  single(2000){}   可自定义时间
 /**
  * 防止快速点击造成打开多个界面

@@ -11,6 +11,7 @@ import android.widget.EditText
  * 功能描述：输入框赋值
  */
 
+//给EditText赋值
 fun EditText.setEditContent(text:String){
     this.text = Editable.Factory.getInstance().newEditable(text)
 }

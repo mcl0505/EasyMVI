@@ -122,6 +122,6 @@ open class BaseDialog<DB : ViewDataBinding,VM : BaseViewModel,>(val layoutId: In
      * 创建viewModel
      */
     private fun createViewModel(): VM {
-        return ViewModelProvider(this).get(getVmClazz(this))
+        return ViewModelProvider(this).get(getVmClazz(this,1))
     }
 }

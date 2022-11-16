@@ -64,7 +64,7 @@ abstract class AbsActivity<V : ViewDataBinding, VM : BaseViewModel> :
         StatusBarUtils.setStatusBarTransparent(this)
         //设置默认状态栏字体为黑色
         StatusBarUtils.setStateBarTextColor(this, isDark)
-        (isNoSensor).yes {
+        if (isNoSensor){
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
         }
         setContentView(R.layout.activity_root)
