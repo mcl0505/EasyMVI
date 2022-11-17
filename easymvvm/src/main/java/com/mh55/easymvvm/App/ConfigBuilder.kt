@@ -5,7 +5,7 @@ import com.mh55.easymvvm.EasyApplication
 object ConfigBuilder {
     //是否开启日志打印
     var isOpenLog = true
-    //是否开启日志采集
+    //是否开启异常采集
     var isOpenCarsh = true
     //网络请求地址
     var mBaseHost = ""

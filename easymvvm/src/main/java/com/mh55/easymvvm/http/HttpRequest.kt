@@ -3,6 +3,8 @@ package com.mh55.easymvvm.http
 import androidx.collection.ArrayMap
 import com.mh55.easymvvm.App.ConfigBuilder
 import com.mh55.easymvvm.http.interceptor.CacheInterceptor
+import com.mh55.easymvvm.http.interceptor.HttpHeaderInterceptor
+import com.mh55.easymvvm.http.interceptor.HttpLogInterceptor
 import com.mh55.easymvvm.http.moshi.MyKotlinJsonAdapterFactory
 import com.mh55.easymvvm.http.moshi.MyStandardJsonAdapters
 import com.squareup.moshi.Moshi
@@ -31,12 +33,7 @@ object HttpRequest {
     lateinit var mDefaultBaseUrl: String
 
     // 默认的请求头
-    private lateinit var mDefaultHeader: ArrayMap<String, String>
-
-    /**
-     * 存储 baseUrl，以便可以动态更改
-     */
-    private lateinit var mBaseUrlMap: ArrayMap<String, String>
+    var mDefaultHeader: ArrayMap<String, String> ? =null
 
     /**
      * 请求超时时间，秒为单位
@@ -48,10 +45,11 @@ object HttpRequest {
      */
     @JvmStatic
     fun addDefaultHeader(name: String, value: String) {
-        if (!this::mDefaultHeader.isInitialized) {
+        if (mDefaultHeader == null) {
             mDefaultHeader = ArrayMap()
         }
-        mDefaultHeader[name] = value
+
+        mDefaultHeader!![name] = value
     }
 
     /**
@@ -83,6 +81,10 @@ object HttpRequest {
             // 超时时间
             httpClientBuilder.connectTimeout(mDefaultTimeout.toLong(), TimeUnit.SECONDS)
             httpClientBuilder.addInterceptor(CacheInterceptor())
+            //请求拦截
+            httpClientBuilder.addInterceptor(HttpHeaderInterceptor())
+            //日志拦截
+            httpClientBuilder.addInterceptor(HttpLogInterceptor())
 
             // 拦截器
             interceptors.forEach { interceptor ->
@@ -91,7 +93,10 @@ object HttpRequest {
                 }
             }
 
+
             val client = httpClientBuilder.build()
+
+
             val builder = Retrofit.Builder().client(client)
                 // 基础url
                 .baseUrl(host)
