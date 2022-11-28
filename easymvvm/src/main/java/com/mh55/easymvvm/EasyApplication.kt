@@ -6,6 +6,7 @@ import androidx.multidex.MultiDexApplication
 import com.kingja.loadsir.callback.Callback
 import com.kingja.loadsir.core.LoadSir
 import com.mh55.easymvvm.App.CrashHandlerUtil
+import com.mh55.easymvvm.App.SignTool
 import com.mh55.easymvvm.ui.loadsir.LoadingCallback
 import com.mh55.easymvvm.utils.MmkvUtil
 
@@ -22,6 +23,7 @@ abstract class EasyApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        SignTool.printSignatureMD5(this)
         MmkvUtil.init(this)
         CrashHandlerUtil.init()
         initLoadSir()

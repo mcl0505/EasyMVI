@@ -24,7 +24,7 @@ object FileUtil {
     // 取得App的文件目录，在sd卡根目录下用包名为目录名，或者在内部的存储目录，用/结尾
     val appDir: String
         get() = if (isSDCardMounted)
-            sdCardBaseDir + "/" + AppUtil.getPackageName() + "/"
+            sdCardBaseDir + "/" + AppUtil.AppInfo.getPackageName() + "/"
         else
             EasyApplication.instance.filesDir.absolutePath + "/"
 

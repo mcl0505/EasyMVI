@@ -51,8 +51,8 @@ internal object CrashHandlerUtil : UncaughtExceptionHandler {
         sb.append(lineSeparator)
         sb.append("&start---").append(lineSeparator)
         sb.append(logTime).append(lineSeparator)
-        sb.append("appVerName:").append(AppUtil.getAppVersionName(EasyApplication.instance)).append(lineSeparator)
-        sb.append("appVerCode:").append(AppUtil.getAppVersionCode(EasyApplication.instance)).append(lineSeparator)
+        sb.append("appVerName:").append(AppUtil.AppInfo.getAppVersionName(EasyApplication.instance)).append(lineSeparator)
+        sb.append("appVerCode:").append(AppUtil.AppInfo.getAppVersionCode(EasyApplication.instance)).append(lineSeparator)
         // 系统版本
         sb.append("OsVer:").append(Build.VERSION.RELEASE).append(lineSeparator)
         // 手机厂商
@@ -70,7 +70,7 @@ internal object CrashHandlerUtil : UncaughtExceptionHandler {
         try {
 
             FileOutputStream(
-                    CRASH_LOG_PATH + DateUtil.getNowString() + ".log", true).use { outputStream ->
+                    CRASH_LOG_PATH + DateUtil.getTimeFormat() + ".log", true).use { outputStream ->
                 outputStream.write(formatLogInfo(ex).toByteArray())
                 outputStream.write("\n".toByteArray())
                 outputStream.write("\n".toByteArray())

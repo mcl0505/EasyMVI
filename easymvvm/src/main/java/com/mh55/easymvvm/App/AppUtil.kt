@@ -171,7 +171,7 @@ class AppUtil {
         /**
          * 清除所有缓存
          */
-        fun clearAllCache(context: Context  = EasyApplication.getContext()) {
+        fun clearAllCache(context: Context = EasyApplication.getContext()) {
             Storage.deleteDir(context.cacheDir)
             if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
                 Storage.deleteDir(context.externalCacheDir)
@@ -231,8 +231,8 @@ class AppUtil {
          * @param context
          * @param packageName
          * @return
-             */
-            fun isAppInstalled(context: Context = EasyApplication.getContext(), packageName: String): Boolean {
+         */
+        fun isAppInstalled(context: Context = EasyApplication.getContext(), packageName: String): Boolean {
             if (TextUtils.isEmpty(packageName))
                 return false
             try {
@@ -248,9 +248,7 @@ class AppUtil {
         }
     }
 
-    companion object {
-        private val TAG = "EnvironmentUtil"
-
+    object AppInfo{
         /**
          * 获取包名
          *
@@ -260,9 +258,9 @@ class AppUtil {
             return EasyApplication.instance.packageName
         }
 
-        fun getAppLogoIcon():Bitmap{
+        fun getAppLogoIcon(): Bitmap {
             val pm = EasyApplication.instance.packageManager
-            return pm.getApplicationIcon(getPackageName()).toBitmap(512,512)
+            return pm.getApplicationIcon(getPackageName()).toBitmap(512, 512)
         }
 
         /**
@@ -318,6 +316,10 @@ class AppUtil {
             println(applicationName)
             return applicationName
         }
+    }
+
+    companion object {
+        private val TAG = "EnvironmentUtil"
 
         /**
          * 获取assets下资源

@@ -10,6 +10,7 @@ open class App : EasyApplication() {
         super.onCreate()
         ConfigBuilder.apply {
             isOpenLog = true
+            mBaseHost = ""
         }
     }
 
