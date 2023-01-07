@@ -5,6 +5,7 @@
     <color name="color_transparent">#00000000</color>
     <color name="color_white">#ffffff</color>
 
+    <color name="color_2C2C2C">#2C2C2C</color>
     <color name="color_ccc">#CCCCCC</color>
     <color name="color_ddd">#DDDDDD</color>
 </resources>

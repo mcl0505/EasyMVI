@@ -7,26 +7,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import com.ethanhua.skeleton.SkeletonScreen
 import com.imyyq.mvvm.base.IActivityResult
+import com.kingja.loadsir.callback.Callback
+import com.kingja.loadsir.callback.SuccessCallback
 import com.kingja.loadsir.core.LoadService
 import com.kingja.loadsir.core.LoadSir
+import com.mh55.easymvvm.R
 import com.mh55.easymvvm.ext.getIntentByMapOrBundle
+import com.mh55.easymvvm.ext.getString
 import com.mh55.easymvvm.mvvm.BaseViewModel
 import com.mh55.easymvvm.mvvm.intent.BaseViewIntent
+import com.mh55.easymvvm.ui.ILoading
 import com.mh55.easymvvm.ui.IView
+import com.mh55.easymvvm.ui.dialog.LoadingDialog
 import com.mh55.easymvvm.ui.loadsir.ILoadsir
-import com.mh55.easymvvm.ui.loadsir.LoadingCallback
 import com.mh55.easymvvm.utils.LogUtil
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.lang.NullPointerException
 
 /**
  * 公司名称：~漫漫人生路~总得错几步~
@@ -37,7 +39,7 @@ import java.lang.NullPointerException
 
 abstract class AbsFragment<V : ViewBinding, VM : BaseViewModel>(
     private val sharedViewModel: Boolean = false,
-) : Fragment(), IView<V, VM>, IActivityResult , ILoadsir {
+) : Fragment(), IView<V, VM>, IActivityResult , ILoadsir,ILoading {
 
     //当前界面 标识
     open val TAG: String get() = this::class.java.simpleName
@@ -46,9 +48,11 @@ abstract class AbsFragment<V : ViewBinding, VM : BaseViewModel>(
     protected lateinit var mBinding: V
     protected lateinit var mViewModel: VM
     private lateinit var mStartActivityForResult: ActivityResultLauncher<Intent>
+
+    //加载框
+    private var mLoadingDialog: LoadingDialog?=null
     //状态展示的根布局
     var mLoadSirView: LoadService<*>? = null
-    var mSkeletonScreen: SkeletonScreen?=null
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
@@ -59,27 +63,67 @@ abstract class AbsFragment<V : ViewBinding, VM : BaseViewModel>(
         savedInstanceState: Bundle?,
     ): View? {
         mBinding = initBinding(layoutInflater, null)
+        getLoadSirView()?.let {
+            LogUtil.d(it)
+            mLoadSirView = LoadSir.getDefault().register(it)
+        }
         return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewAndViewModel()
-        getLoadSirView()?.let {
-            LogUtil.d(it)
-            mLoadSirView = LoadSir.getDefault().register(it)
-        }
+
         initParam()
         initBaseLiveData()
         initData()
         initViewObservable()
     }
 
+    /**
+     * 显示加载框
+     */
     override fun showLoading() {
-        mLoadSirView?.showCallback(LoadingCallback::class.java)
+        showLoading(R.string.loading_msg.getString())
     }
 
+    /**
+     * 显示加载框
+     * @param msg 加载提示文字
+     */
+    override fun showLoading(msg: String) {
+        mLoadingDialog = LoadingDialog(mContext,msg)
+        mLoadingDialog?.showDialog()
+    }
+
+    /**
+     * 取消加载框
+     */
     override fun dismissLoading() {
+        mLoadingDialog?.dismissDialog()
+    }
+
+    /**
+     * 显示状态布局
+     */
+    override fun showCallback(clazz: Class<out Callback>) {
+        showCallback(clazz){_,_->}
+    }
+
+    /**
+     * 显示状态布局与添加布局回调
+     */
+    override fun showCallback(clazz: Class<out Callback>,block:(context:Context,view:View) -> Unit) {
+        mLoadSirView?.showCallback(clazz)
+        mLoadSirView?.setCallBack(clazz){context,view->
+            block.invoke(context, view)
+        }
+    }
+
+    /**
+     * 隐藏状态布局的显示
+     */
+    override fun dismissCallback(){
         mLoadSirView?.showSuccess()
     }
 
@@ -143,7 +187,6 @@ abstract class AbsFragment<V : ViewBinding, VM : BaseViewModel>(
         mViewModel.mUiChangeLiveData.postValue(BaseViewIntent.setResult(resultCode, map, bundle, data))
     }
 
-
     override fun initBaseLiveData() {
         mViewModel.mUiChangeLiveData.observe(this){
             when(it){
@@ -168,6 +211,19 @@ abstract class AbsFragment<V : ViewBinding, VM : BaseViewModel>(
                         mActivity.setResult(it.resultCode, it.data)
                     }
 
+                }
+                is BaseViewIntent.showCallback->{
+                    if (it.callback is SuccessCallback){
+                        dismissCallback()
+                    }else {
+                        showCallback(it.callback,it.block)
+                    }
+
+                }
+                is BaseViewIntent.showLoading->{
+                    if (it.isShow){
+                        showLoading(it.showMsg)
+                    }else dismissLoading()
                 }
             }
         }

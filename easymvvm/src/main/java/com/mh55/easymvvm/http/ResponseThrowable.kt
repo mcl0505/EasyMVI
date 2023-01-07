@@ -4,7 +4,7 @@ class ResponseThrowable : Exception {
     /**
      * 错误码
      */
-    var errorCode: Int = 0
+    var errorCode: String = "0"
 
     /**
      * 错误信息
@@ -16,7 +16,7 @@ class ResponseThrowable : Exception {
      */
     var errorLog: String?
 
-    constructor(errorCode: Int, errorMsg: String?, errorLog: String? = "") : super(errorMsg) {
+    constructor(errorCode: String, errorMsg: String?, errorLog: String? = "") : super(errorMsg) {
         this.errorCode = errorCode
         this.errorMsg = errorMsg
         this.errorLog = errorLog

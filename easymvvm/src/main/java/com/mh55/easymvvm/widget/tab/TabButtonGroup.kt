@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import java.util.ArrayList
+import java.util.*
 
 /**
  * 公司：
@@ -32,7 +32,7 @@ class TabButtonGroup @JvmOverloads constructor(
     private val mAnimator: ValueAnimator?
     private var mAnimView: View? = null
     private val mRunnable: Runnable
-    lateinit var onTabSelectClick:(positon:Int)->Unit
+    lateinit var onTabSelectClick: (positon: Int) -> Unit
     override fun onFinishInflate() {
         super.onFinishInflate()
         var i = 0
@@ -58,11 +58,11 @@ class TabButtonGroup @JvmOverloads constructor(
             val tbn = mList[position]
             tbn.setChecked(true)
             mCurPosition = position
-                        mAnimView = tbn;
+            mAnimView = tbn;
             mAnimator?.start();
             selectPosition(mCurPosition)
             postDelayed(mRunnable, 150)
-            if (::onTabSelectClick.isInitialized)onTabSelectClick.invoke(position)
+            if (::onTabSelectClick.isInitialized) onTabSelectClick.invoke(position)
         }
     }
 
@@ -100,16 +100,20 @@ class TabButtonGroup @JvmOverloads constructor(
         }
     }
 
-    fun setSelectClick(selectPosition:Int){
+    fun setSelectClick(selectPosition: Int) {
         mList[selectPosition].performClick()
     }
 
-    fun selectPosition(selectPosition:Int){
+    fun selectPosition(selectPosition: Int) {
     }
 }
 
 
-fun TabButtonGroup.withViewPager(context: AppCompatActivity,vp:ViewPager2,fragmentList:MutableList<Fragment>){
+fun TabButtonGroup.withViewPager(
+    context: AppCompatActivity,
+    vp: ViewPager2,
+    fragmentList: MutableList<Fragment>
+) {
     vp.apply {
         //添加适配器
         adapter = object : FragmentStateAdapter(context) {

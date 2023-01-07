@@ -33,7 +33,12 @@ object HttpRequest {
     lateinit var mDefaultBaseUrl: String
 
     // 默认的请求头
-    var mDefaultHeader: ArrayMap<String, String> ? =null
+    lateinit var mDefaultHeader: ArrayMap<String, String>
+
+    /**
+     * 存储 baseUrl，以便可以动态更改
+     */
+    private lateinit var mBaseUrlMap: ArrayMap<String, String>
 
     /**
      * 请求超时时间，秒为单位
@@ -45,11 +50,10 @@ object HttpRequest {
      */
     @JvmStatic
     fun addDefaultHeader(name: String, value: String) {
-        if (mDefaultHeader == null) {
+        if (!this::mDefaultHeader.isInitialized) {
             mDefaultHeader = ArrayMap()
         }
-
-        mDefaultHeader!![name] = value
+        mDefaultHeader[name] = value
     }
 
     /**
@@ -81,9 +85,7 @@ object HttpRequest {
             // 超时时间
             httpClientBuilder.connectTimeout(mDefaultTimeout.toLong(), TimeUnit.SECONDS)
             httpClientBuilder.addInterceptor(CacheInterceptor())
-            //请求拦截
             httpClientBuilder.addInterceptor(HttpHeaderInterceptor())
-            //日志拦截
             httpClientBuilder.addInterceptor(HttpLogInterceptor())
 
             // 拦截器
@@ -93,10 +95,7 @@ object HttpRequest {
                 }
             }
 
-
             val client = httpClientBuilder.build()
-
-
             val builder = Retrofit.Builder().client(client)
                 // 基础url
                 .baseUrl(host)

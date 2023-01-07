@@ -12,4 +12,6 @@
     <string name="channel_mention">\@提醒消息</string>
     <string name="channel_notice">系统通知</string>
     <string name="channel_call">音视频通话</string>
+
+    <string name="loading_msg">加载中</string>
 </resources>

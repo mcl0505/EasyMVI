@@ -14,7 +14,7 @@ class HttpHeaderInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val requestBuilder = request.newBuilder()
-        HttpRequest.mDefaultHeader?.forEach {
+        HttpRequest.mDefaultHeader.forEach {
             requestBuilder.addHeader(it.key,it.value)
         }
         val build = requestBuilder.build()

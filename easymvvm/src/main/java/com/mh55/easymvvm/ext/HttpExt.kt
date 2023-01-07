@@ -1,37 +1,38 @@
 package com.mh55.easymvvm.ext
 
-import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
 import androidx.lifecycle.viewModelScope
 import com.mh55.easymvvm.EasyApplication
+import com.mh55.easymvvm.R
 import com.mh55.easymvvm.http.BaseResponse
 import com.mh55.easymvvm.http.ExceptionHandle
 import com.mh55.easymvvm.http.ResponseThrowable
 import com.mh55.easymvvm.mvvm.BaseViewModel
-import com.mh55.easymvvm.mvvm.LoadingEntity
-import com.mh55.easymvvm.utils.LogUtil
 import kotlinx.coroutines.*
+import java.net.ConnectException
 
 fun <T> BaseViewModel.request(
     block: suspend () -> BaseResponse<T>,
     success: (T?) -> Unit,
     error: (ResponseThrowable) -> Unit = {},
     isLoading: Boolean = false,
-    loadingMessage: String? = null
+    loadingMessage: String = R.string.loading_msg.getString()
 ): Job {
     // 开始执行请求
-    httpState.postValue(BaseViewModel.HttpState.HttpBefore(
-        isLoading,
-        loadingMessage?.isNotEmpty() == true,
-        loadingMessage ?: ""))
+    if (isLoading)showLoading(loadingMessage)
     return viewModelScope.launch {
+        if (!isConnected()){
+            error.invoke(ExceptionHandle.handleException(ConnectException()))
+            return@launch
+        }
+
         kotlin.runCatching {
             //请求体
             block()
         }.onSuccess {
             // 网络请求成功， 结束请求
-            httpState.postValue(BaseViewModel.HttpState.HttpAfter)
+            if (isLoading)dismissLoading()
             //校验请求结果码是否正确，不正确会抛出异常走下面的onFailure
             kotlin.runCatching {
                 executeResponse(it) { coroutine ->
@@ -40,20 +41,14 @@ fun <T> BaseViewModel.request(
             }.onFailure { error ->
                 // 请求时发生异常， 执行失败回调
                 val responseThrowable = ExceptionHandle.handleException(error)
-                httpState.postValue(BaseViewModel.HttpState.HttpFailed(responseThrowable.errorCode,responseThrowable.errorMsg ?: ""))
-                responseThrowable.errorLog?.let { errorLog ->
-                    LogUtil.e(errorLog)
-                }
+                if (isLoading)dismissLoading()
                 // 执行失败的回调方法
                 error(responseThrowable)
             }
         }.onFailure { error ->
             // 请求时发生异常， 执行失败回调
+            if (isLoading)dismissLoading()
             val responseThrowable = ExceptionHandle.handleException(error)
-            httpState.postValue(BaseViewModel.HttpState.HttpFailed(responseThrowable.errorCode,responseThrowable.errorMsg ?: ""))
-            responseThrowable.errorLog?.let { errorLog ->
-                LogUtil.e(errorLog)
-            }
             // 执行失败的回调方法
             error(responseThrowable)
         }

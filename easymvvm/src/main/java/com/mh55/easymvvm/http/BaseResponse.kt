@@ -22,7 +22,7 @@ abstract class BaseResponse<T> {
      *
      * @return Code值
      */
-    abstract fun getResponseCode(): Int
+    abstract fun getResponseCode(): String
 
     /**
      * 服务器返回的Data数据

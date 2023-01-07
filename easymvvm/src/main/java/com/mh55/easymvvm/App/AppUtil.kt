@@ -50,7 +50,7 @@ import java.io.InputStreamReader
  * @author zhouhuan
  * @time 2020/11/30 23:10
  */
-class AppUtil {
+object AppUtil {
 
     /**
      * 当前app的是否在运行
@@ -171,7 +171,7 @@ class AppUtil {
         /**
          * 清除所有缓存
          */
-        fun clearAllCache(context: Context = EasyApplication.getContext()) {
+        fun clearAllCache(context: Context  = EasyApplication.getContext()) {
             Storage.deleteDir(context.cacheDir)
             if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
                 Storage.deleteDir(context.externalCacheDir)
@@ -179,72 +179,6 @@ class AppUtil {
                 context.deleteDatabase("webview.db")
                 context.deleteDatabase("webviewCache.db")
             }
-        }
-    }
-
-    /**
-     * APK相关操作
-     */
-    object Package {
-
-        /**
-         * 安装APK
-         *
-         * @param context
-         * @param file
-         */
-        fun installApp(context: Context, file: File) {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive")
-            context.startActivity(intent)
-        }
-
-        /**
-         * 卸载APK
-         *
-         * @param context
-         * @param packageName
-         */
-        fun unInstallApp(context: Context, packageName: String) {
-            val packageUri = Uri.parse("package:$packageName")
-            val intent = Intent(Intent.ACTION_DELETE, packageUri)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            context.startActivity(intent)
-        }
-
-        /**
-         * 获得APK包名
-         *
-         * @param context
-         * @param apkFile
-         * @return
-         */
-        fun getApkFilePackage(context: Context, apkFile: File): String? {
-            val pm = context.packageManager
-            val info = pm.getPackageArchiveInfo(apkFile.path, PackageManager.GET_ACTIVITIES)
-            return info?.applicationInfo?.packageName
-        }
-
-        /**
-         * 判断是否已经安装
-         *
-         * @param context
-         * @param packageName
-         * @return
-         */
-        fun isAppInstalled(context: Context = EasyApplication.getContext(), packageName: String): Boolean {
-            if (TextUtils.isEmpty(packageName))
-                return false
-            try {
-                context.packageManager.getApplicationInfo(
-                    packageName,
-                    PackageManager.GET_UNINSTALLED_PACKAGES
-                )
-                return true
-            } catch (e: NameNotFoundException) {
-                return false
-            }
-
         }
     }
 
@@ -258,9 +192,12 @@ class AppUtil {
             return EasyApplication.instance.packageName
         }
 
-        fun getAppLogoIcon(): Bitmap {
+        /**
+         * 获取appLogo
+         */
+        fun getAppLogoIcon():Bitmap{
             val pm = EasyApplication.instance.packageManager
-            return pm.getApplicationIcon(getPackageName()).toBitmap(512, 512)
+            return pm.getApplicationIcon(getPackageName()).toBitmap(512,512)
         }
 
         /**
@@ -316,100 +253,164 @@ class AppUtil {
             println(applicationName)
             return applicationName
         }
+
     }
 
-    companion object {
-        private val TAG = "EnvironmentUtil"
+
+    /**
+     * APK相关操作
+     */
+    object Package {
 
         /**
-         * 获取assets下资源
+         * 安装APK
          *
          * @param context
-         * @param fileName
-         * @return
+         * @param file
          */
-        fun getAssetsString(context: Context, fileName: String): String {
-            val stringBuilder = StringBuilder()
-            try {
-                val assetManager = context.assets
-                val bf = BufferedReader(InputStreamReader(assetManager.open(fileName)))
-                var line: String? = null
-                while (({ line = bf.readLine() }) != null) {
-                    stringBuilder.append(line)
-                }
-                bf.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-
-            return stringBuilder.toString()
-        }
-
-        /**
-         * 获取系统语言
-         *
-         * @param context
-         * @return
-         * @param context
-         * @return
-         */
-        fun getSystemLanguage(context: Context): String {
-            val locale = context.resources.configuration.locale
-            return locale.language
-        }
-
-        /**
-         * app是否在前台
-         *
-         * @param context
-         * @return
-         */
-        fun isForeground(context: Context): Boolean {
-            val activityManager =
-                context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            val appProcesses = activityManager.runningAppProcesses
-            for (appProcess in appProcesses) {
-                if (appProcess.processName == context.packageName) {
-                    return appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
-                }
-            }
-            return false
-        }
-
-        /**
-         * 返回app运行状态 1:程序在前台运行 2:程序在后台运行 3:程序未启动 注意：需要配置权限<uses-permission android:name="android.permission.GET_TASKS"></uses-permission>
-         */
-        @SuppressLint("NewApi")
-        fun getAppStatus(context: Context): Int {
-            val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            val list = am.getRunningTasks(20)
-            // 判断程序是否在栈顶
-            if (list[0].topActivity!!.packageName == context.packageName) {
-                return 1
-            } else {
-                // 判断程序是否在栈里
-                for (info in list) {
-                    if (info.topActivity!!.packageName == context.packageName) {
-                        return 2
-                    }
-                }
-                return 3// 栈里找不到，返回3
-            }
-        }
-
-        /**
-         * 启动应用
-         *
-         * @param context
-         * @param className
-         */
-        fun openApp(context: Context, className: String) {
-            val intent = Intent(Intent.ACTION_MAIN)
-            intent.addCategory(Intent.CATEGORY_LAUNCHER)
-            val cn = ComponentName(context.packageName, className)
-            intent.component = cn
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        fun installApp(context: Context, file: File) {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive")
             context.startActivity(intent)
         }
+
+        /**
+         * 卸载APK
+         *
+         * @param context
+         * @param packageName
+         */
+        fun unInstallApp(context: Context, packageName: String) {
+            val packageUri = Uri.parse("package:$packageName")
+            val intent = Intent(Intent.ACTION_DELETE, packageUri)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            context.startActivity(intent)
+        }
+
+        /**
+         * 获得APK包名
+         *
+         * @param context
+         * @param apkFile
+         * @return
+         */
+        fun getApkFilePackage(context: Context, apkFile: File): String? {
+            val pm = context.packageManager
+            val info = pm.getPackageArchiveInfo(apkFile.path, PackageManager.GET_ACTIVITIES)
+            return info?.applicationInfo?.packageName
+        }
+
+        /**
+         * 判断是否已经安装
+         *
+         * @param context
+         * @param packageName
+         * @return
+             */
+            fun isAppInstalled(context: Context = EasyApplication.getContext(), packageName: String): Boolean {
+            if (TextUtils.isEmpty(packageName))
+                return false
+            try {
+                context.packageManager.getApplicationInfo(
+                    packageName,
+                    PackageManager.GET_UNINSTALLED_PACKAGES
+                )
+                return true
+            } catch (e: NameNotFoundException) {
+                return false
+            }
+
+        }
+    }
+
+    /**
+     * 获取assets下资源
+     *
+     * @param context
+     * @param fileName
+     * @return
+     */
+    fun getAssetsString(context: Context, fileName: String): String {
+        val stringBuilder = StringBuilder()
+        try {
+            val assetManager = context.assets
+            val bf = BufferedReader(InputStreamReader(assetManager.open(fileName)))
+            var line: String? = null
+            while (({ line = bf.readLine() }) != null) {
+                stringBuilder.append(line)
+            }
+            bf.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return stringBuilder.toString()
+    }
+
+    /**
+     * 获取系统语言
+     *
+     * @param context
+     * @return
+     * @param context
+     * @return
+     */
+    fun getSystemLanguage(context: Context): String {
+        val locale = context.resources.configuration.locale
+        return locale.language
+    }
+
+    /**
+     * app是否在前台
+     *
+     * @param context
+     * @return
+     */
+    fun isForeground(context: Context): Boolean {
+        val activityManager =
+            context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val appProcesses = activityManager.runningAppProcesses
+        for (appProcess in appProcesses) {
+            if (appProcess.processName == context.packageName) {
+                return appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+            }
+        }
+        return false
+    }
+
+    /**
+     * 返回app运行状态 1:程序在前台运行 2:程序在后台运行 3:程序未启动 注意：需要配置权限<uses-permission android:name="android.permission.GET_TASKS"></uses-permission>
+     */
+    @SuppressLint("NewApi")
+    fun getAppStatus(context: Context): Int {
+        val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val list = am.getRunningTasks(20)
+        // 判断程序是否在栈顶
+        if (list[0].topActivity!!.packageName == context.packageName) {
+            return 1
+        } else {
+            // 判断程序是否在栈里
+            for (info in list) {
+                if (info.topActivity!!.packageName == context.packageName) {
+                    return 2
+                }
+            }
+            return 3// 栈里找不到，返回3
+        }
+    }
+
+    /**
+     * 启动应用
+     *
+     * @param context
+     * @param className
+     */
+    fun openApp(context: Context, className: String) {
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_LAUNCHER)
+        val cn = ComponentName(context.packageName, className)
+        intent.component = cn
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        context.startActivity(intent)
     }
 }

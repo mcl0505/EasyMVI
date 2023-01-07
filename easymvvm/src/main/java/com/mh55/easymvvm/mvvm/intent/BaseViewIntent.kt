@@ -1,8 +1,11 @@
 package com.mh55.easymvvm.mvvm.intent
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import com.kingja.loadsir.callback.Callback
 
 sealed class BaseViewIntent{
     /**
@@ -34,5 +37,15 @@ sealed class BaseViewIntent{
         val resultCode: Int?=null,
         val map: MutableMap<String, *>? = null,
         val bundle: Bundle? = null
+    ):BaseViewIntent()
+
+    data class showCallback(
+        val callback: Class<out Callback>,
+        val block: (context:Context,view: View) ->Unit = {_,_->  }
+    ):BaseViewIntent()
+
+    data class showLoading(
+        val isShow:Boolean = false,
+        val showMsg:String = ""
     ):BaseViewIntent()
 }

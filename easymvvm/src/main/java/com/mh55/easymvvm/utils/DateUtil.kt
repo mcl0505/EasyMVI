@@ -13,48 +13,6 @@ import kotlin.collections.ArrayList
  * 功能描述：时间格式化工具
  */
 object DateUtil {
-
-    /**
-     * 功能：
-     * 1：不传任何数据 ==> 获取当前时间
-     * 2：传数据  ==>  根据时间戳转为对应的时间格式字符串
-     * @param time 时间戳
-     * @param formatStr 返回的时间格式
-     */
-    fun getTimeFormat(time: Long = System.currentTimeMillis(),formatStr: String = "yyyy-MM-dd HH:mm:ss") = SimpleDateFormat(formatStr).format(Date(time))
-
-    /**
-     * 时间戳转时间对象
-     * @param time 时间戳  默认当前时间
-     */
-    fun longToDate(time: Long = System.currentTimeMillis()) = Date(time)
-
-    /**
-     * 将时间字符串转化为 date
-     * @param dateStr 时间字符串  例如：2022-11-24 14:26:30
-     */
-    fun stringToDate(dateStr: String, formatStr: String = "yyyy-MM-dd HH:mm:ss"): Date? {
-        var date: Date? = null
-        try {
-            val sdf = SimpleDateFormat(formatStr)
-            date = sdf.parse(dateStr)
-        } catch (e: ParseException) {
-            e.printStackTrace()
-        }
-
-        return date
-    }
-
-
-
-
-
-
-
-
-
-
-
     /**
      * 获取当前时间的位置：一天24小时以半小时为单位划分为48个单元格
      * @return
@@ -65,6 +23,8 @@ object DateUtil {
             calendar.time = Date()
             return Math.ceil((calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE)).toDouble() / 30).toInt()
         }
+
+    fun getNowString() = formatMDHM(System.currentTimeMillis(), FormatType.yyyyMMddHHmmss)
 
     enum class FormatType {
         yyyy, yyyyMM, yyyyMMdd, yyyyMMddHHmm, yyyyMMddHHmmss, MMdd, HHmm, MM, dd, MMddHHmm,MMddHHmmyr,
