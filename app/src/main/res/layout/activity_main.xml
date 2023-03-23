@@ -4,19 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable
-            name="click"
-            type="com.mh55.easy.MainActivity" />
 
         <variable
             name="viewModel"
-            type="com.mh55.easy.view_model.MainViewModel" />
+            type="com.mh55.demo.view_model.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context="com.mh55.demo.MainActivity">
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/mViewPager"
@@ -24,12 +21,12 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@id/mTabButtonGroup"
             app:layout_constraintTop_toTopOf="parent"/>
-        <com.mh55.easymvvm.widget.tab.TabButtonGroup
+        <com.mh55.easy.widget.tab.TabButtonGroup
             android:id="@+id/mTabButtonGroup"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_constraintBottom_toBottomOf="parent">
-            <com.mh55.easymvvm.widget.tab.TabButton
+            <com.mh55.easy.widget.tab.TabButton
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 app:tbn_checked="true"
@@ -41,7 +38,7 @@
                 app:tbn_selected_icon="@mipmap/icon_main_tab_store_select"
                 app:tbn_unselected_icon="@mipmap/icon_main_tab_store_default"
                 android:layout_height="match_parent"/>
-            <com.mh55.easymvvm.widget.tab.TabButton
+            <com.mh55.easy.widget.tab.TabButton
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 app:tbn_tip="个人中心"
@@ -53,7 +50,7 @@
                 app:tbn_unselected_icon="@mipmap/icon_main_tab_mine_default"
                 android:layout_height="match_parent"/>
 
-        </com.mh55.easymvvm.widget.tab.TabButtonGroup>
+        </com.mh55.easy.widget.tab.TabButtonGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

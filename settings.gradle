@@ -1,4 +1,4 @@
 
 rootProject.name = "EasyMVVMLibrary"
 include ':app'
-include ':easymvvm'
+include ':easy'

@@ -1,0 +1,22 @@
+apply plugin:'maven-publish'
+publishing{
+    repositories{
+        maven {
+            credentials{
+                username('admin')
+                password("admin")
+            }
+            url('http://localhost:8081/repository/easy/')
+        }
+    }
+
+    publications{
+        common(MavenPublication){
+            artifact('easy.aar'){
+                groupId 'com.mh55.easy'
+                artifactId 'easy'
+                version '1.0.0'
+            }
+        }
+    }
+}

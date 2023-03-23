@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragment.IndexFragment"
+        tools:context="com.mh55.demo.fragment.IndexFragment"
         android:paddingTop="30dp">
         <FrameLayout
             android:layout_width="match_parent"

@@ -6,13 +6,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.mh55.easy.view_model.MainViewModel" />
+            type="com.mh55.demo.view_model.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".UserActivity">
+        tools:context="com.mh55.demo.UserActivity">
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
