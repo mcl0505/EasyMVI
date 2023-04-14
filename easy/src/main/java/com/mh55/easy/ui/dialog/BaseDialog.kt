@@ -14,7 +14,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import com.kckj.baselibrary.ext.bindingInflate
+import com.mh55.easy.ext.bindingInflate
 import com.mh55.easy.R
 import com.mh55.easy.ext.getVmClazz
 import com.mh55.easy.mvvm.BaseViewModel

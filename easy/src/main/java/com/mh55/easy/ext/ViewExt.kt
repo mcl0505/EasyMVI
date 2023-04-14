@@ -1,6 +1,9 @@
 package com.mh55.easy.ext
 
 import android.graphics.Bitmap
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.os.SystemClock
 import android.view.View
@@ -10,7 +13,6 @@ import androidx.palette.graphics.Palette
 import com.mh55.easy.App.ConfigBuilder
 import com.mh55.easy.R
 
-private var lastClickTime: Long = 0
 //防止快速点击造成打开多个界面   只允许在 1秒内只能点击一次  single(2000){}   可自定义时间
 /**
  * 防止快速点击造成打开多个界面
@@ -30,6 +32,7 @@ fun <T : View> T.singleClick(time: Int = 500, block: (T) -> Unit) {
 
 /**
  * view 显示隐藏
+ * @param show true:显示  false:不显示
  */
 fun View.visibleOrGone(show: Boolean) {
     if (show) {
@@ -41,6 +44,7 @@ fun View.visibleOrGone(show: Boolean) {
 
 /**
  * view 显示与占位
+ * @param show true:显示  false:不显示但是占位
  */
 fun View.visibleOrInvisible(show: Boolean) {
     if (show) {
@@ -48,6 +52,19 @@ fun View.visibleOrInvisible(show: Boolean) {
     } else {
         this.visibility = View.INVISIBLE
     }
+}
+
+/**
+ * 布局置灰处理
+ * @param isGray true:正常  false:灰色
+ */
+fun View.changeGray(isGray:Boolean){
+    //全局置灰处理
+    val paint = Paint()
+    val cm = ColorMatrix()
+    cm.setSaturation(if (isGray) 0f else 1f)
+    paint.colorFilter = ColorMatrixColorFilter(cm)
+    this.setLayerType(View.LAYER_TYPE_HARDWARE, paint)
 }
 
 /**

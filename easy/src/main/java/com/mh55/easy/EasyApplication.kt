@@ -73,7 +73,6 @@ open class EasyApplication : MultiDexApplication() {
                 builder.addCallback(it)
             }
         }
-
         builder.addCallback(LoadSirDefaultNetCallback())
         builder.commit()
     }

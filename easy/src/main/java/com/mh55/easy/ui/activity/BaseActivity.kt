@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
-import com.kckj.baselibrary.ext.bindingInflate
+import com.mh55.easy.ext.bindingInflate
 import com.mh55.easy.mvvm.BaseViewModel
 
 abstract class BaseActivity<V : ViewDataBinding, VM : BaseViewModel>(

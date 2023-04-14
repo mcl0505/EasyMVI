@@ -69,7 +69,7 @@ abstract class AbsActivity<V : ViewDataBinding, VM : BaseViewModel> :
         super.onCreate(savedInstanceState)
         mContext = this
         //app 全局置灰处理
-        changeGray(ConfigBuilder.isGray)
+        window.decorView.changeGray(ConfigBuilder.isGray)
         //全屏 透明状态栏
         StatusBarUtils.setStatusBarTransparent(this)
         //设置默认状态栏字体为黑色

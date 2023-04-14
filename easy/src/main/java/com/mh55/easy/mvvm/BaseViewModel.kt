@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import com.imyyq.mvvm.base.IActivityResult
 import com.imyyq.mvvm.base.IArgumentsFromIntent
@@ -72,6 +73,11 @@ open class BaseViewModel : ViewModel(), DefaultLifecycleObserver, IActivityResul
 
     override fun dismissLoading() {
         mUiChangeLiveData.postValue(BaseViewIntent.showLoading(false,R.string.loading_msg.getString()))
+    }
+
+    override fun onDestroy(owner: LifecycleOwner) {
+        super.onDestroy(owner)
+        onCleared()
     }
 
 }
