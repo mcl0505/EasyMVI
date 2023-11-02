@@ -26,7 +26,6 @@ object ToastUtil {
         oldMsg = msg
     }
 
-
     private fun create(massage: String,img:Drawable?=null) {
         if (img!=null){
             ToastUtils.make()

@@ -22,7 +22,8 @@ sealed class BaseViewIntent{
     data class startActivityForResult(
         val clazz: Class<out Activity>,
         val map: MutableMap<String, *>? = null,
-        val bundle: Bundle?=null):BaseViewIntent()
+        val bundle: Bundle?=null
+        ):BaseViewIntent()
 
     /**
      * 设置返回参数

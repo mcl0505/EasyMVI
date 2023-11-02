@@ -6,7 +6,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewbinding.ViewBinding
-import com.mh55.easy.EasyApplication
+import com.mh55.easy.EasyApp
+import com.mh55.easy.manager.AppManager
 import com.mh55.easy.mvvm.BaseViewModel
 import com.mh55.easy.utils.bus.LiveDataBus
 import java.lang.reflect.ParameterizedType
@@ -75,7 +76,7 @@ interface IView<V : ViewBinding, VM : BaseViewModel> : IArgumentsFromBundle {
         BaseViewModel::class.java
         val vm = ViewModelProvider(
             viewModelStoreOwner,
-            ViewModelProvider.AndroidViewModelFactory(EasyApplication.instance)
+            ViewModelProvider.AndroidViewModelFactory(AppManager.getApplication())
         ).get(modelClass)
         // 让 vm 也可以直接获取到 bundle
         vm.mBundle = getBundle()

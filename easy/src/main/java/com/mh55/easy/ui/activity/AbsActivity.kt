@@ -6,9 +6,6 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.ColorMatrix
-import android.graphics.ColorMatrixColorFilter
-import android.graphics.Paint
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.MotionEvent
@@ -20,7 +17,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
-import com.blankj.utilcode.util.BarUtils
 import com.imyyq.mvvm.base.IActivityResult
 import com.imyyq.mvvm.base.IArgumentsFromIntent
 import com.kingja.loadsir.callback.Callback

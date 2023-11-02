@@ -1,9 +1,9 @@
 package com.mh55.demo
 
 import com.mh55.easy.App.ConfigBuilder
-import com.mh55.easy.EasyApplication
+import com.mh55.easy.EasyApp
 
-open class App : EasyApplication() {
+open class App : EasyApp() {
     override fun onCreate() {
         super.onCreate()
         ConfigBuilder.apply {

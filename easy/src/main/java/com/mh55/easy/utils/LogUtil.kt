@@ -1,6 +1,7 @@
 package com.mh55.easy.utils
 
 import android.util.Log
+import com.blankj.utilcode.util.LogUtils
 import com.mh55.easy.App.ConfigBuilder
 import java.util.*
 
@@ -23,6 +24,7 @@ object LogUtil {
     @JvmStatic
     fun v(msg: Any?) {
         printLog(V, TAG, msg)
+        LogUtils.d()
     }
 
     @JvmStatic

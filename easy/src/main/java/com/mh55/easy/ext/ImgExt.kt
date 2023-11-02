@@ -8,7 +8,8 @@ import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import coil.transform.RoundedCornersTransformation
 import com.mh55.easy.App.ConfigBuilder
-import com.mh55.easy.EasyApplication
+import com.mh55.easy.EasyApp
+import com.mh55.easy.manager.AppManager
 
 /**
  *   公司名称: ~漫漫人生路~总得错几步~
@@ -29,7 +30,7 @@ import com.mh55.easy.EasyApplication
  */
 fun displayImage(url: Any?,imageView: ImageView?=null,block:(drawable:Drawable)->Unit = {}){
     if (imageView == null){
-        val request = ImageRequest.Builder(EasyApplication.getContext())
+        val request = ImageRequest.Builder(AppManager.getContext())
             .data(url)
             .placeholder(ConfigBuilder.mImagePlaceholder)
             .error(ConfigBuilder.mImagePlaceholder)
@@ -37,7 +38,7 @@ fun displayImage(url: Any?,imageView: ImageView?=null,block:(drawable:Drawable)-
                 block.invoke(it)
             }
             .build()
-        EasyApplication.getContext().imageLoader.enqueue(request)
+        AppManager.getContext().imageLoader.enqueue(request)
     }else {
         imageView.loadAny(url){
             placeholder(ConfigBuilder.mImagePlaceholder)
@@ -54,7 +55,7 @@ fun displayImage(url: Any?,imageView: ImageView?=null,block:(drawable:Drawable)-
  */
 fun displayImageRound(url: Any?,imageView: ImageView?=null,block:(drawable:Drawable)->Unit = {}){
     if (imageView == null){
-        val request = ImageRequest.Builder(EasyApplication.getContext())
+        val request = ImageRequest.Builder(AppManager.getContext())
             .data(url)
             .placeholder(ConfigBuilder.mImagePlaceholder)
             .error(ConfigBuilder.mImagePlaceholder)
@@ -62,7 +63,7 @@ fun displayImageRound(url: Any?,imageView: ImageView?=null,block:(drawable:Drawa
                 block.invoke(it)
             }
             .build()
-        EasyApplication.getContext().imageLoader.enqueue(request)
+        AppManager.getContext().imageLoader.enqueue(request)
     }else {
         imageView.loadAny(url){
             placeholder(ConfigBuilder.mImagePlaceholder)
@@ -80,12 +81,12 @@ fun displayImageRound(url: Any?,imageView: ImageView?=null,block:(drawable:Drawa
  */
 fun displayImageRadius(url: Any?,imageView: ImageView?=null,radius:Float?=0f){
     if (imageView == null){
-        val request = ImageRequest.Builder(EasyApplication.getContext())
+        val request = ImageRequest.Builder(AppManager.getContext())
             .data(url)
             .placeholder(ConfigBuilder.mImagePlaceholder)
             .error(ConfigBuilder.mImagePlaceholder)
             .build()
-        EasyApplication.getContext().imageLoader.enqueue(request)
+        AppManager.getContext().imageLoader.enqueue(request)
     }else {
         imageView.loadAny(url){
             placeholder(ConfigBuilder.mImagePlaceholder)

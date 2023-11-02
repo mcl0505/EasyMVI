@@ -2,15 +2,22 @@ package com.mh55.easy.ext
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.widget.Button
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.viewModelScope
-import com.mh55.easy.EasyApplication
+import com.google.android.material.button.MaterialButton
+import com.kingja.loadsir.callback.SuccessCallback
+import com.mh55.easy.EasyApp
 import com.mh55.easy.R
 import com.mh55.easy.http.*
+import com.mh55.easy.manager.AppManager
 import com.mh55.easy.mvvm.BaseViewModel
+import com.mh55.easy.mvvm.intent.BaseViewIntent
+import com.mh55.easy.ui.loadsir.LoadSirDefaultNetCallback
 import kotlinx.coroutines.*
 import java.net.ConnectException
 
-fun <T> BaseViewModel.request(
+fun <T> BaseViewModel.httpRequest(
     block: suspend () -> BaseResponse<T>,
     success: (T?) -> Unit,
     error: (ResponseThrowable) -> Unit = {},
@@ -53,8 +60,28 @@ fun <T> BaseViewModel.request(
     }
 }
 
+fun BaseViewModel.httpRequestMultiple(
+    block: suspend CoroutineScope.() -> Unit
+){
+    if (isConnected()){
+        mUiChangeLiveData.postValue(BaseViewIntent.showCallback(SuccessCallback::class.java))
+        viewModelScope.launch {
+            block()
+        }
+    }else {
+        mUiChangeLiveData.postValue(BaseViewIntent.showCallback(LoadSirDefaultNetCallback::class.java){_,view->
+            view.findViewById<MaterialButton>(R.id.btn_net_refresh).singleClick {
+                httpRequestMultiple(block)
+            }
+        })
+    }
+}
+
+
+
+
 fun isConnected(): Boolean {
-    val manager = EasyApplication.instance.getSystemService(
+    val manager = AppManager.getApplication().getSystemService(
         Context.CONNECTIVITY_SERVICE
     ) as? ConnectivityManager?
     if (manager != null) {

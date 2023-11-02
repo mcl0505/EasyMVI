@@ -34,7 +34,7 @@ class HttpLogInterceptor  : Interceptor {
 
         if (ConfigBuilder.isOpenLog){
             val sb = StringBuilder()
-            sb.append("LogUtil  ===============Start================================================================================ ")
+            sb.append("||  ===============Start================================================================================ ")
             sb.append("\n|| 请求地址 ==> $url")
             if (HttpRequest.mDefaultHeader!=null && HttpRequest.mDefaultHeader?.size?:0 > 0){
                 sb.append("\n|| 默认参数 ==> ${JSON.toJSONString(HttpRequest.mDefaultHeader)}")
@@ -48,7 +48,6 @@ class HttpLogInterceptor  : Interceptor {
                     for (i in 0 until body!!.size) {
                         formSb.append(body!!.encodedName(i) + "=" + body!!.encodedValue(i) + ",")
                     }
-
 
                 }else {
                     val mBuffer = Buffer()

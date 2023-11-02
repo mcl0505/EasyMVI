@@ -1,6 +1,5 @@
 package com.mh55.easy.App
 
-import com.mh55.easy.EasyApplication
 import com.mh55.easy.R
 
 object ConfigBuilder {
@@ -13,7 +12,4 @@ object ConfigBuilder {
     //是否开启全局置灰  用作特殊节日默哀处理
     var isGray = true
     var mImagePlaceholder = R.mipmap.icon_avatar_default
-    //Bugly appID
-    var mCrashReportAppId = "73fef7c8f3"
-
 }

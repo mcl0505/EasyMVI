@@ -31,5 +31,5 @@ abstract class BindAdapter<T,DB: ViewDataBinding>(layout:Int) : BaseQuickAdapter
 
     abstract fun convertBind(holder: BaseViewHolder, item: T, binding: DB)
 
-    fun convertBind(holder: BaseViewHolder, item: T, binding: DB,payloads: List<Any>){}
+    open fun convertBind(holder: BaseViewHolder, item: T, binding: DB,payloads: List<Any>){}
 }

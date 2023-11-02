@@ -4,9 +4,11 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -39,7 +41,7 @@ import kotlinx.coroutines.launch
 
 abstract class AbsFragment<V : ViewBinding, VM : BaseViewModel>(
     private val sharedViewModel: Boolean = false,
-) : Fragment(), IView<V, VM>, IActivityResult , ILoadsir,ILoading {
+) : Fragment(), IView<V, VM>, IActivityResult, ILoadsir, ILoading {
 
     //当前界面 标识
     open val TAG: String get() = this::class.java.simpleName
@@ -48,15 +50,16 @@ abstract class AbsFragment<V : ViewBinding, VM : BaseViewModel>(
     protected lateinit var mBinding: V
     protected lateinit var mViewModel: VM
     private lateinit var mStartActivityForResult: ActivityResultLauncher<Intent>
-
     //加载框
-    private var mLoadingDialog: LoadingDialog?=null
+    private var mLoadingDialog: LoadingDialog? = null
+
     //状态展示的根布局
     var mLoadSirView: LoadService<*>? = null
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -92,7 +95,7 @@ abstract class AbsFragment<V : ViewBinding, VM : BaseViewModel>(
      * @param msg 加载提示文字
      */
     override fun showLoading(msg: String) {
-        mLoadingDialog = LoadingDialog(mContext,msg)
+        mLoadingDialog = LoadingDialog(mContext, msg)
         mLoadingDialog?.showDialog()
     }
 
@@ -107,15 +110,18 @@ abstract class AbsFragment<V : ViewBinding, VM : BaseViewModel>(
      * 显示状态布局
      */
     override fun showCallback(clazz: Class<out Callback>) {
-        showCallback(clazz){_,_->}
+        showCallback(clazz) { _, _ -> }
     }
 
     /**
      * 显示状态布局与添加布局回调
      */
-    override fun showCallback(clazz: Class<out Callback>,block:(context:Context,view:View) -> Unit) {
+    override fun showCallback(
+        clazz: Class<out Callback>,
+        block: (context: Context, view: View) -> Unit
+    ) {
         mLoadSirView?.showCallback(clazz)
-        mLoadSirView?.setCallBack(clazz){context,view->
+        mLoadSirView?.setCallBack(clazz) { context, view ->
             block.invoke(context, view)
         }
     }
@@ -123,7 +129,7 @@ abstract class AbsFragment<V : ViewBinding, VM : BaseViewModel>(
     /**
      * 隐藏状态布局的显示
      */
-    override fun dismissCallback(){
+    override fun dismissCallback() {
         mLoadSirView?.showSuccess()
     }
 
@@ -174,56 +180,96 @@ abstract class AbsFragment<V : ViewBinding, VM : BaseViewModel>(
         }
     }
 
-    override fun startActivity(clazz: Class<out Activity>, map: MutableMap<String, *>?, bundle: Bundle?) {
+    override fun startActivity(
+        clazz: Class<out Activity>,
+        map: MutableMap<String, *>?,
+        bundle: Bundle?
+    ) {
         mViewModel.mUiChangeLiveData.postValue(BaseViewIntent.startActivity(clazz, map, bundle))
     }
-    override fun startActivityForResult(clazz: Class<out Activity>, map: MutableMap<String, *>?, bundle: Bundle?) {
-        mViewModel.mUiChangeLiveData.postValue(BaseViewIntent.startActivityForResult(clazz, map, bundle))
+
+    override fun startActivityForResult(
+        clazz: Class<out Activity>,
+        map: MutableMap<String, *>?,
+        bundle: Bundle?
+    ) {
+        mViewModel.mUiChangeLiveData.postValue(
+            BaseViewIntent.startActivityForResult(
+                clazz,
+                map,
+                bundle
+            )
+        )
     }
+
     override fun finish(resultCode: Int, map: MutableMap<String, *>?, bundle: Bundle?) {
         mViewModel.mUiChangeLiveData.postValue(BaseViewIntent.finish(resultCode, map, bundle))
     }
-    override fun setResult(resultCode: Int, map: MutableMap<String, *>?, bundle: Bundle?, data: Intent?) {
-        mViewModel.mUiChangeLiveData.postValue(BaseViewIntent.setResult(resultCode, map, bundle, data))
+
+    override fun setResult(
+        resultCode: Int,
+        map: MutableMap<String, *>?,
+        bundle: Bundle?,
+        data: Intent?
+    ) {
+        mViewModel.mUiChangeLiveData.postValue(
+            BaseViewIntent.setResult(
+                resultCode,
+                map,
+                bundle,
+                data
+            )
+        )
     }
 
     override fun initBaseLiveData() {
-        mViewModel.mUiChangeLiveData.observe(this){
-            when(it){
-                is BaseViewIntent.finish->{
-                    if (it.resultCode != null){
-                        mActivity.setResult(it.resultCode, getIntentByMapOrBundle(mContext,null,it.map,it.bundle))
+        mViewModel.mUiChangeLiveData.observe(this) {
+            when (it) {
+                is BaseViewIntent.finish -> {
+                    if (it.resultCode != null) {
+                        mActivity.setResult(
+                            it.resultCode,
+                            getIntentByMapOrBundle(mContext, null, it.map, it.bundle)
+                        )
                     }
 
                     mActivity.finish()
                 }
-                is BaseViewIntent.startActivity->{
-                    startActivity(getIntentByMapOrBundle(mContext,it.clazz,it.map,it.bundle))
+                is BaseViewIntent.startActivity -> {
+                    startActivity(getIntentByMapOrBundle(mContext, it.clazz, it.map, it.bundle))
                 }
-                is BaseViewIntent.startActivityForResult->{
-                    mStartActivityForResult.launch(getIntentByMapOrBundle(mContext,it. clazz, it.map, it.bundle))
+                is BaseViewIntent.startActivityForResult -> {
+
+                    mStartActivityForResult.launch(
+                        getIntentByMapOrBundle(
+                            mContext,
+                            it.clazz,
+                            it.map,
+                            it.bundle
+                        )
+                    )
                 }
-                is BaseViewIntent.setResult->{
-                    if (it.data == null){
-                        val intent = getIntentByMapOrBundle(mContext,null,it.map,it.bundle)
-                        mActivity.setResult(it.resultCode,intent)
-                    }else{
+                is BaseViewIntent.setResult -> {
+                    if (it.data == null) {
+                        val intent = getIntentByMapOrBundle(mContext, null, it.map, it.bundle)
+                        mActivity.setResult(it.resultCode, intent)
+                    } else {
                         mActivity.setResult(it.resultCode, it.data)
                     }
 
                 }
-                is BaseViewIntent.showCallback->{
-                    if (it.callback is SuccessCallback){
+                is BaseViewIntent.showCallback -> {
+                    if (it.callback is SuccessCallback) {
                         dismissCallback()
-                    }else {
-                        showCallback(it.callback,it.block)
+                    } else {
+                        showCallback(it.callback, it.block)
                     }
 
                 }
-                is BaseViewIntent.showLoading->{
-                    if (it.isShow){
+                is BaseViewIntent.showLoading -> {
+                    if (it.isShow) {
                         showLoading(it.showMsg)
-                    }else dismissLoading()
+                    } else dismissLoading()
                 }
             }
         }

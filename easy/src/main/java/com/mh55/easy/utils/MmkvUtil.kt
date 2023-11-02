@@ -1,7 +1,8 @@
 package com.mh55.easy.utils
 
 import android.content.Context
-import com.mh55.easy.EasyApplication
+import com.mh55.easy.EasyApp
+import com.mh55.easy.manager.AppManager
 import com.tencent.mmkv.MMKV
 
 /**
@@ -24,7 +25,7 @@ object MmkvUtil {
      */
     fun <T> putValue(key: String, value: T) {
         if (kv == null) {
-            init(EasyApplication.instance)
+            init(AppManager.getApplication())
         }
 
         keyList.add(key)
@@ -44,7 +45,7 @@ object MmkvUtil {
     fun <T> getValue(key: String, default: T): T {
 
         if (kv == null) {
-            init(EasyApplication.getContext())
+            init(AppManager.getContext())
         }
 
 
@@ -67,7 +68,7 @@ object MmkvUtil {
     fun clean(key: String? = null) {
 
         if (kv == null) {
-            init(EasyApplication.instance)
+            init(AppManager.getContext())
         }
 
         if (key == null) {
