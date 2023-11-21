@@ -17,6 +17,7 @@ import com.mh55.easy.ui.loadsir.LoadSirDefaultNetCallback
 import kotlinx.coroutines.*
 import java.net.ConnectException
 
+//网络请求封装
 fun <T> BaseViewModel.httpRequest(
     block: suspend () -> BaseResponse<T>,
     success: (T?) -> Unit,
